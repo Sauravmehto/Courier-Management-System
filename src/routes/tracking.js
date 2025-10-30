@@ -8,25 +8,26 @@ const router = express.Router();
 // Track by order number
 router.get('/order/:orderNumber', async (req, res) => {
   try {
+    // Short-circuit to demo data if in MOCK_MODE
+    if ((process.env.MOCK_MODE === 'true') && req.params.orderNumber.toLowerCase() === 'orddemo123') {
+      return res.json({
+        order: {
+          orderNumber: 'ORDDEMO123',
+          trackingId: 'yxzw2345',
+          status: 'in_transit'
+        },
+        tracking: [
+          { status: 'in_transit', description: 'Package departed from sorting facility', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) },
+          { status: 'picked_up', description: 'Package picked up by courier', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000) },
+          { status: 'confirmed', description: 'Shipment confirmed', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 10 * 60 * 60 * 1000) },
+          { status: 'pending', description: 'Order created and is awaiting confirmation', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+        ]
+      });
+    }
+
     const order = await Order.findOne({ orderNumber: req.params.orderNumber });
 
     if (!order) {
-      // Demo fallback for a sample order number when no real data is present
-      if ((process.env.MOCK_MODE === 'true') && req.params.orderNumber.toLowerCase() === 'orddemo123') {
-        return res.json({
-          order: {
-            orderNumber: 'ORDDEMO123',
-            trackingId: 'yxzw2345',
-            status: 'in_transit'
-          },
-          tracking: [
-            { status: 'in_transit', description: 'Package departed from sorting facility', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) },
-            { status: 'picked_up', description: 'Package picked up by courier', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000) },
-            { status: 'confirmed', description: 'Shipment confirmed', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 10 * 60 * 60 * 1000) },
-            { status: 'pending', description: 'Order created and is awaiting confirmation', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) }
-          ]
-        });
-      }
       return res.status(404).json({ message: 'Order not found' });
     }
 
@@ -49,25 +50,26 @@ router.get('/order/:orderNumber', async (req, res) => {
 // Track by tracking ID
 router.get('/tracking/:trackingId', async (req, res) => {
   try {
+    // Short-circuit to demo data if in MOCK_MODE
+    if ((process.env.MOCK_MODE === 'true') && req.params.trackingId.toLowerCase() === 'yxzw2345') {
+      return res.json({
+        order: {
+          orderNumber: 'ORDDEMO123',
+          trackingId: 'yxzw2345',
+          status: 'in_transit'
+        },
+        tracking: [
+          { status: 'in_transit', description: 'Package departed from sorting facility', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) },
+          { status: 'picked_up', description: 'Package picked up by courier', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000) },
+          { status: 'confirmed', description: 'Shipment confirmed', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 10 * 60 * 60 * 1000) },
+          { status: 'pending', description: 'Order created and is awaiting confirmation', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+        ]
+      });
+    }
+
     const order = await Order.findOne({ trackingId: req.params.trackingId });
 
     if (!order) {
-      // Demo fallback for a sample tracking id when no real data is present
-      if ((process.env.MOCK_MODE === 'true') && req.params.trackingId.toLowerCase() === 'yxzw2345') {
-        return res.json({
-          order: {
-            orderNumber: 'ORDDEMO123',
-            trackingId: 'yxzw2345',
-            status: 'in_transit'
-          },
-          tracking: [
-            { status: 'in_transit', description: 'Package departed from sorting facility', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) },
-            { status: 'picked_up', description: 'Package picked up by courier', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000) },
-            { status: 'confirmed', description: 'Shipment confirmed', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 10 * 60 * 60 * 1000) },
-            { status: 'pending', description: 'Order created and is awaiting confirmation', location: 'Mumbai, MH', timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) }
-          ]
-        });
-      }
       return res.status(404).json({ message: 'Tracking ID not found' });
     }
 

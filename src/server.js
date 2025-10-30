@@ -26,12 +26,16 @@ app.get('/api/health', (req, res) => {
 });
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/courier_system', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('✅ MongoDB Connected'))
-.catch(err => console.error('❌ MongoDB Connection Error:', err));
+const mongoUri = process.env.MONGODB_URI;
+
+if (!mongoUri) {
+  console.warn('⚠️  MONGODB_URI not set. Running in MOCK_MODE. No database connection will be made.');
+  process.env.MOCK_MODE = process.env.MOCK_MODE || 'true';
+} else {
+  mongoose.connect(mongoUri)
+    .then(() => console.log('✅ MongoDB Connected'))
+    .catch(err => console.error('❌ MongoDB Connection Error:', err));
+}
 
 const PORT = process.env.PORT || 5000;
 
