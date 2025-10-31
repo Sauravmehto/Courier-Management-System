@@ -19,6 +19,7 @@ app.use('/api/orders', require('./routes/orders'));
 app.use('/api/tracking', require('./routes/tracking'));
 app.use('/api/couriers', require('./routes/couriers'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/kyc', require('./routes/kyc'));
 
 // Health check
 app.get('/api/health', (req, res) => {
