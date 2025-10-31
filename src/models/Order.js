@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
   orderNumber: {
     type: String,
     unique: true,
-    required: true
+    required: false  // Auto-generated in pre-save hook
   },
   courierPartner: {
     type: String,
@@ -77,7 +77,11 @@ const orderSchema = new mongoose.Schema({
 // Generate order number before saving
 orderSchema.pre('save', async function(next) {
   if (!this.orderNumber) {
-    this.orderNumber = 'ORD' + Date.now().toString().slice(-9);
+    // Generate unique order number: ORD + timestamp + random 3 digits
+    // Using timestamp ensures uniqueness in most cases
+    const timestamp = Date.now().toString().slice(-9);
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    this.orderNumber = `ORD${timestamp}${random}`;
   }
   next();
 });
